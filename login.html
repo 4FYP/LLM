@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Cognitive AI — Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex; height: 100vh; overflow: hidden;
+      background: #09090f;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left {
+      flex: 0 0 62%;
+      background: #09090f;
+      display: flex; flex-direction: column;
+      padding: 44px 56px 44px 52px;
+      position: relative; overflow: hidden;
+    }
+
+    /* subtle grid background */
+    .left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(91,76,219,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,76,219,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* brand */
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      position: relative; z-index: 1;
+    }
+    .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #5b4cdb 0%, #7c3aed 100%);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 800; letter-spacing: -.5px;
+    }
+    .brand-name { color: #fff; font-size: 15px; font-weight: 600; }
+
+    /* main copy */
+    .left-body {
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      padding: 36px 0; position: relative; z-index: 1;
+    }
+
+    .main-heading {
+      font-size: 44px; font-weight: 800; color: #fff;
+      line-height: 1.12; margin-bottom: 14px; letter-spacing: -.5px;
+    }
+    .main-sub {
+      font-size: 15px; color: #7b7fa6; line-height: 1.65;
+      margin-bottom: 44px; max-width: 380px;
+    }
+
+    /* features */
+    .features { display: flex; flex-direction: column; gap: 22px; }
+    .feat {
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .feat-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+    }
+    .feat-title { color: #fff; font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+    .feat-desc  { color: #6b6f8f; font-size: 13px; line-height: 1.45; }
+
+    /* testimonial */
+    .testimonial {
+      margin-top: 44px; padding: 18px 22px;
+      border-left: 3px solid #5b4cdb;
+      background: rgba(91,76,219,.08);
+      border-radius: 0 8px 8px 0;
+      position: relative; z-index: 1;
+    }
+    .testimonial p  { color: #b0b4cc; font-size: 13.5px; font-style: italic; line-height: 1.6; }
+    .testimonial span { color: #5b4cdb; font-size: 12.5px; font-weight: 600; margin-top: 6px; display: block; }
+
+    /* ── RIGHT PANEL ── */
+    .right {
+      flex: 0 0 38%;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px 52px;
+    }
+
+    .form-box { width: 100%; max-width: 330px; }
+
+    .form-box h2 {
+      font-size: 23px; font-weight: 700; color: #111827;
+      margin-bottom: 5px; letter-spacing: -.3px;
+    }
+    .form-box .sub-text {
+      font-size: 13px; color: #6b7280; margin-bottom: 30px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block; font-size: 11.5px; font-weight: 600;
+      color: #374151; margin-bottom: 6px; letter-spacing: .03em;
+    }
+    .field input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid #e5e7eb; border-radius: 9px;
+      font-size: 14px; color: #111827; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      font-family: inherit; background: #fafafa;
+    }
+    .field input:focus {
+      border-color: #5b4cdb; background: #fff;
+      box-shadow: 0 0 0 3px rgba(91,76,219,.1);
+    }
+    .field input::placeholder { color: #9ca3af; }
+
+    /* advanced toggle */
+    .adv-toggle {
+      font-size: 12px; color: #5b4cdb; cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      margin-bottom: 14px; user-select: none; width: fit-content;
+    }
+    .adv-toggle:hover { text-decoration: underline; }
+    .adv-toggle .arr { font-size: 10px; transition: transform .2s; }
+    .adv-toggle.open .arr { transform: rotate(180deg); }
+    #adv-fields { display: none; }
+    #adv-fields.open { display: block; }
+
+    /* button */
+    .login-btn {
+      width: 100%; padding: 12px;
+      background: #5b4cdb; color: #fff;
+      border: none; border-radius: 9px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .1s;
+      font-family: inherit; margin-top: 4px;
+    }
+    .login-btn:hover  { background: #4a3bc4; }
+    .login-btn:active { transform: scale(.985); }
+    .login-btn:disabled { opacity: .55; cursor: default; }
+
+    /* error */
+    .err-box {
+      margin-top: 14px; padding: 10px 14px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; font-size: 13px; color: #dc2626;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LEFT ══ -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-icon">AI</div>
+    <span class="brand-name">Cognitive AI</span>
+  </div>
+
+  <div class="left-body">
+    <h1 class="main-heading">Your AI Odoo<br>Expert</h1>
+    <p class="main-sub">From quick answers to full development — just chat with your AI assistant that understands your business.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div>
+          <div class="feat-title">Instant Insights</div>
+          <div class="feat-desc">Get answers, pull reports from your Odoo data in seconds.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💬</div>
+        <div>
+          <div class="feat-title">Configure in English</div>
+          <div class="feat-desc">Set up configurations by describing them.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔧</div>
+        <div>
+          <div class="feat-title">Build Features Fast</div>
+          <div class="feat-desc">Developers build customisations by chatting. AI implements, you review and ship.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📋</div>
+        <div>
+          <div class="feat-title">Scale Your Agency</div>
+          <div class="feat-desc">Deliver more projects without hiring, multiply your team's output.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <p>"Cognitive AI is faster now. Projects that took weeks now take days. AI is a game changer."</p>
+      <span>— Odoo Consultant</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RIGHT ══ -->
+<div class="right">
+  <div class="form-box">
+    <h2>Log in to your account</h2>
+    <p class="sub-text">Welcome back — sign in to continue</p>
+
+    <div class="field">
+      <label>Username / Email / Phone</label>
+      <input id="f-user" type="text" placeholder="Enter your username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="f-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Log In</button>
+    <div class="err-box" id="err-box"></div>
+  </div>
+</div>
+
+<script>
+  // Redirect if already logged in
+  if (localStorage.getItem('cf_platform_token')) {
+    window.location.href = '/chat';
+  }
+
+  ['f-user','f-pass'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+
+  async function doLogin() {
+    const username = document.getElementById('f-user').value.trim();
+    const password = document.getElementById('f-pass').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('err-box');
+
+    if (!username || !password) { showErr('Please enter username and password.'); return; }
+
+    btn.disabled = true; btn.textContent = 'Signing in…';
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { showErr(data.detail || 'Login failed.'); return; }
+
+      localStorage.setItem('cf_platform_token', data.token);
+      localStorage.setItem('cf_platform_user',  JSON.stringify(data));
+      window.location.href = '/chat';
+    } catch(e) {
+      showErr('Connection error. Please try again.');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Log In';
+    }
+  }
+
+  function showErr(msg) {
+    const err = document.getElementById('err-box');
+    err.textContent = msg; err.style.display = 'block';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+﻿name,partner_id,invoice_date,invoice_date_due,state,amount_untaxed,amount_tax,amount_total,amount_residual,payment_state,currency_id,invoice_user_id
+INV/2026/00006,ABC CUSTOMER SVC.,2026-06-13,2026-06-15,posted,7890.0,0.0,7890.0,7890.0,not_paid,USD,Administrator
+INV/2026/00005,Sonal,2026-06-13,2026-06-15,posted,7890.0,0.0,7890.0,7890.0,not_paid,USD,Administrator
+INV/2026/00004,Sonal,2026-06-13,2026-06-15,posted,7890.0,0.0,7890.0,7890.0,not_paid,USD,Administrator
+INV/2026/00003,ABC CUSTOMER SVC.,2026-06-08,2026-06-08,posted,3000.0,0.0,3000.0,3000.0,not_paid,USD,Administrator
+INV/2026/00002,Test Customer,2026-06-08,2026-06-08,posted,2000.0,0.0,2000.0,2000.0,not_paid,USD,Administrator
+INV/2026/00001,Sonal,2026-06-08,2026-06-08,posted,1000.0,0.0,1000.0,1000.0,not_paid,USD,Administrator
