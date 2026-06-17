@@ -1,0 +1,25 @@
+[
+  {
+    "username": "admin",
+    "password": "admin@123",
+    "name": "Admin"
+  },
+  {
+    "username": "cognitiveforce",
+    "password": "CognitiveForce@123",
+    "name": "CognitiveForce"
+  },
+  {
+    "username": "ehsan@gmail.com",
+    "email": "ehsan@gmail.com",
+    "phone": "12345",
+    "password": "k4sxepYSFHkLr3b",
+    "name": "ehsan"
+  },
+  {
+    "username": "ehaq9274637@gmail.com",
+    "email": "ehaq9274637@gmail.com",
+    "name": "ehsan",
+    "auth_provider": "google"
+  }
+]

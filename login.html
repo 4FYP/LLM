@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Cognitive AI — Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex; height: 100vh; overflow: hidden;
+      background: #09090f;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left {
+      flex: 0 0 62%;
+      background: #09090f;
+      display: flex; flex-direction: column;
+      padding: 44px 56px 44px 52px;
+      position: relative; overflow: hidden;
+    }
+
+    /* subtle grid background */
+    .left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(91,76,219,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,76,219,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* brand */
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      position: relative; z-index: 1;
+    }
+    .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #5b4cdb 0%, #7c3aed 100%);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 800; letter-spacing: -.5px;
+    }
+    .brand-name { color: #fff; font-size: 15px; font-weight: 600; }
+
+    /* main copy */
+    .left-body {
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      padding: 36px 0; position: relative; z-index: 1;
+    }
+
+    .main-heading {
+      font-size: 44px; font-weight: 800; color: #fff;
+      line-height: 1.12; margin-bottom: 14px; letter-spacing: -.5px;
+    }
+    .main-sub {
+      font-size: 15px; color: #7b7fa6; line-height: 1.65;
+      margin-bottom: 44px; max-width: 380px;
+    }
+
+    /* features */
+    .features { display: flex; flex-direction: column; gap: 22px; }
+    .feat {
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .feat-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+    }
+    .feat-title { color: #fff; font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+    .feat-desc  { color: #6b6f8f; font-size: 13px; line-height: 1.45; }
+
+    /* testimonial */
+    .testimonial {
+      margin-top: 44px; padding: 18px 22px;
+      border-left: 3px solid #5b4cdb;
+      background: rgba(91,76,219,.08);
+      border-radius: 0 8px 8px 0;
+      position: relative; z-index: 1;
+    }
+    .testimonial p  { color: #b0b4cc; font-size: 13.5px; font-style: italic; line-height: 1.6; }
+    .testimonial span { color: #5b4cdb; font-size: 12.5px; font-weight: 600; margin-top: 6px; display: block; }
+
+    /* ── RIGHT PANEL ── */
+    .right {
+      flex: 0 0 38%;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px 52px;
+    }
+
+    .form-box { width: 100%; max-width: 330px; }
+
+    .form-box h2 {
+      font-size: 23px; font-weight: 700; color: #111827;
+      margin-bottom: 5px; letter-spacing: -.3px;
+    }
+    .form-box .sub-text {
+      font-size: 13px; color: #6b7280; margin-bottom: 30px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block; font-size: 11.5px; font-weight: 600;
+      color: #374151; margin-bottom: 6px; letter-spacing: .03em;
+    }
+    .field input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid #e5e7eb; border-radius: 9px;
+      font-size: 14px; color: #111827; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      font-family: inherit; background: #fafafa;
+    }
+    .field input:focus {
+      border-color: #5b4cdb; background: #fff;
+      box-shadow: 0 0 0 3px rgba(91,76,219,.1);
+    }
+    .field input::placeholder { color: #9ca3af; }
+
+    /* advanced toggle */
+    .adv-toggle {
+      font-size: 12px; color: #5b4cdb; cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      margin-bottom: 14px; user-select: none; width: fit-content;
+    }
+    .adv-toggle:hover { text-decoration: underline; }
+    .adv-toggle .arr { font-size: 10px; transition: transform .2s; }
+    .adv-toggle.open .arr { transform: rotate(180deg); }
+    #adv-fields { display: none; }
+    #adv-fields.open { display: block; }
+
+    /* button */
+    .login-btn {
+      width: 100%; padding: 12px;
+      background: #5b4cdb; color: #fff;
+      border: none; border-radius: 9px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .1s;
+      font-family: inherit; margin-top: 4px;
+    }
+    .login-btn:hover  { background: #4a3bc4; }
+    .login-btn:active { transform: scale(.985); }
+    .login-btn:disabled { opacity: .55; cursor: default; }
+
+    /* error */
+    .err-box {
+      margin-top: 14px; padding: 10px 14px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; font-size: 13px; color: #dc2626;
+      display: none;
+    }
+
+    .footer-link {
+      margin-top: 22px; text-align: center;
+      font-size: 13.5px; color: #6b7280;
+    }
+    .footer-link a {
+      color: #2196f3; font-weight: 600; text-decoration: none; cursor: pointer;
+    }
+    .footer-link a:hover { text-decoration: underline; }
+
+    /* ── SIGNUP VIEW ── */
+    .signup-page {
+      position: fixed; inset: 0; z-index: 100;
+      display: none; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #4facfe 0%, #2b7de9 45%, #1a5fc4 100%);
+      padding: 24px;
+    }
+    .signup-page.active { display: flex; }
+
+    .signup-card {
+      width: 100%; max-width: 420px;
+      background: #fff; border-radius: 24px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.18);
+    }
+    .signup-card h2 {
+      font-size: 26px; font-weight: 700; color: #1a1a2e;
+      margin-bottom: 6px; letter-spacing: -.3px;
+    }
+    .signup-card .sub-text {
+      font-size: 14px; color: #8b95a5; margin-bottom: 28px;
+    }
+
+    .google-btn {
+      width: 100%; padding: 12px 16px;
+      background: #fff; border: 1.5px solid #e2e8f0;
+      border-radius: 12px; font-size: 14.5px; font-weight: 500;
+      color: #334155; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      font-family: inherit; transition: background .15s, border-color .15s;
+    }
+    .google-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .google-btn svg { flex-shrink: 0; }
+
+    .or-divider {
+      display: flex; align-items: center; gap: 14px;
+      margin: 22px 0; color: #94a3b8; font-size: 12px; font-weight: 500;
+    }
+    .or-divider::before, .or-divider::after {
+      content: ''; flex: 1; height: 1px; background: #e2e8f0;
+    }
+
+    .signup-card .field { margin-bottom: 14px; }
+    .signup-card .field input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid #e2e8f0; border-radius: 12px;
+      font-size: 14px; color: #1a1a2e; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      font-family: inherit; background: #fff;
+    }
+    .signup-card .field input:focus {
+      border-color: #2196f3;
+      box-shadow: 0 0 0 3px rgba(33,150,243,.12);
+    }
+    .signup-card .field input::placeholder { color: #b0bac5; }
+
+    .signup-btn {
+      width: 100%; padding: 14px;
+      background: #2196f3; color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .1s;
+      font-family: inherit; margin-top: 8px;
+    }
+    .signup-btn:hover  { background: #1a85e0; }
+    .signup-btn:active { transform: scale(.985); }
+    .signup-btn:disabled { opacity: .55; cursor: default; }
+
+    .signup-card .footer-link { margin-top: 24px; }
+    .signup-card .err-box { margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ LEFT ══ -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-icon">AI</div>
+    <span class="brand-name">Cognitive AI</span>
+  </div>
+
+  <div class="left-body">
+    <h1 class="main-heading">Your AI Odoo<br>Expert</h1>
+    <p class="main-sub">From quick answers to full development — just chat with your AI assistant that understands your business.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div>
+          <div class="feat-title">Instant Insights</div>
+          <div class="feat-desc">Get answers, pull reports from your Odoo data in seconds.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💬</div>
+        <div>
+          <div class="feat-title">Configure in English</div>
+          <div class="feat-desc">Set up configurations by describing them.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔧</div>
+        <div>
+          <div class="feat-title">Build Features Fast</div>
+          <div class="feat-desc">Developers build customisations by chatting. AI implements, you review and ship.</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📋</div>
+        <div>
+          <div class="feat-title">Scale Your Agency</div>
+          <div class="feat-desc">Deliver more projects without hiring, multiply your team's output.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <p>"Cognitive AI is faster now. Projects that took weeks now take days. AI is a game changer."</p>
+      <span>— Odoo Consultant</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RIGHT ══ -->
+<div class="right">
+  <div class="form-box">
+    <h2>Log in to your account</h2>
+    <p class="sub-text">Welcome back — sign in to continue</p>
+
+    <div class="field">
+      <label>Username / Email / Phone</label>
+      <input id="f-user" type="text" placeholder="Enter your username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="f-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Log In</button>
+    <div class="err-box" id="err-box"></div>
+    <p class="footer-link">Don't have an account? <a onclick="showSignup()">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- ══ SIGNUP ══ -->
+<div class="signup-page" id="signup-view">
+  <div class="signup-card">
+    <h2>Create Account</h2>
+    <p class="sub-text">Join CognitiveForce Today</p>
+
+    <button class="google-btn" type="button" onclick="googleSignup()">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.56 2.98-2.26 5.5-4.86 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="or-divider">OR</div>
+
+    <div class="field">
+      <input id="s-email" type="email" placeholder="Email Address" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <input id="s-phone" type="tel" placeholder="Phone Number" autocomplete="tel"/>
+    </div>
+    <div class="field">
+      <input id="s-pass" type="password" placeholder="Password" autocomplete="new-password"/>
+    </div>
+
+    <button class="signup-btn" id="signup-btn" onclick="doSignup()">SignUp</button>
+    <div class="err-box" id="signup-err-box"></div>
+    <p class="footer-link">Already have an account? <a onclick="showLogin()">Sign In</a></p>
+  </div>
+</div>
+
+<script>
+  // Redirect if already logged in
+  if (localStorage.getItem('cf_platform_token')) {
+    window.location.href = '/chat';
+  }
+
+  // Open signup if URL is /signup
+  if (window.location.pathname === '/signup') {
+    document.addEventListener('DOMContentLoaded', () => showSignup());
+  }
+
+  function showSignup() {
+    document.getElementById('signup-view').classList.add('active');
+    history.replaceState(null, '', '/signup');
+  }
+
+  function showLogin() {
+    document.getElementById('signup-view').classList.remove('active');
+    document.getElementById('signup-err-box').style.display = 'none';
+    history.replaceState(null, '', '/login');
+  }
+
+  function googleSignup() {
+    window.location.href = '/auth/google';
+  }
+
+  // Show Google OAuth errors returned via ?error=
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const oauthErr = params.get('error');
+    if (oauthErr) {
+      const msg = oauthErr === 'access_denied'
+        ? 'Google sign-in was cancelled.'
+        : 'Google sign-in failed. Please try again.';
+      document.addEventListener('DOMContentLoaded', () => {
+        showSignup();
+        showSignupErr(msg);
+      });
+    }
+  })();
+
+  ['f-user','f-pass'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+
+  ['s-email','s-phone','s-pass'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSignup();
+    });
+  });
+
+  async function doLogin() {
+    const username = document.getElementById('f-user').value.trim();
+    const password = document.getElementById('f-pass').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('err-box');
+
+    if (!username || !password) { showErr('Please enter username and password.'); return; }
+
+    btn.disabled = true; btn.textContent = 'Signing in…';
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { showErr(data.detail || 'Login failed.'); return; }
+
+      localStorage.setItem('cf_platform_token', data.token);
+      localStorage.setItem('cf_platform_user',  JSON.stringify(data));
+      window.location.href = '/chat';
+    } catch(e) {
+      showErr('Connection error. Please try again.');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Log In';
+    }
+  }
+
+  async function doSignup() {
+    const email = document.getElementById('s-email').value.trim();
+    const phone = document.getElementById('s-phone').value.trim();
+    const password = document.getElementById('s-pass').value;
+    const btn = document.getElementById('signup-btn');
+
+    if (!email || !phone || !password) {
+      showSignupErr('Please fill in all fields.');
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Creating account…';
+    document.getElementById('signup-err-box').style.display = 'none';
+
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, phone, password })
+      });
+      const data = await res.json();
+      if (!res.ok) { showSignupErr(data.detail || 'Sign up failed.'); return; }
+
+      localStorage.setItem('cf_platform_token', data.token);
+      localStorage.setItem('cf_platform_user',  JSON.stringify(data));
+      window.location.href = '/chat';
+    } catch(e) {
+      showSignupErr('Connection error. Please try again.');
+    } finally {
+      btn.disabled = false; btn.textContent = 'SignUp';
+    }
+  }
+
+  function showErr(msg) {
+    const err = document.getElementById('err-box');
+    err.textContent = msg; err.style.display = 'block';
+  }
+
+  function showSignupErr(msg) {
+    const err = document.getElementById('signup-err-box');
+    err.textContent = msg; err.style.display = 'block';
+  }
+</script>
+</body>
+</html>
