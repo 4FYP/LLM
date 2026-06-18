@@ -2,7 +2,7 @@
 import os, io, json, base64, uuid, csv, urllib.parse
 import httpx
 from pathlib import Path
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import StreamingResponse, FileResponse, RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -478,8 +478,12 @@ def _google_auth_html(auth: dict) -> HTMLResponse:
     return HTMLResponse(html)
 
 
-@app.get("/auth/google")
 @app.get("/login/google")
+async def login_google_redirect():
+    return RedirectResponse("/auth/google")
+
+
+@app.get("/auth/google")
 async def google_auth_start():
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
         raise HTTPException(status_code=503, detail="Google sign-in is not configured.")
@@ -497,8 +501,13 @@ async def google_auth_start():
     return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
 
 
-@app.get("/auth/google/callback")
 @app.get("/login/google/callback")
+async def login_google_callback_redirect(request: Request):
+    q = request.url.query
+    return RedirectResponse(f"/auth/google/callback{f'?{q}' if q else ''}")
+
+
+@app.get("/auth/google/callback")
 async def google_auth_callback(
     code: Optional[str] = None,
     state: Optional[str] = None,
