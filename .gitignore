@@ -1,0 +1,25 @@
+# Secrets and local config
+.env
+
+# User data and runtime state
+users.json
+sessions_data/
+downloads/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local MCP config (may contain API keys)
+mcp_config.json
+.excel_store.json
