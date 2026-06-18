@@ -34,6 +34,7 @@ GOOGLE_REDIRECT_URI  = os.getenv(
 _oauth_states: set[str] = set()
 
 app = FastAPI()
+Path("static").mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # session_id → {"client": OdooClient, "db": str, "username": str, "version": str}
@@ -478,6 +479,7 @@ def _google_auth_html(auth: dict) -> HTMLResponse:
 
 
 @app.get("/auth/google")
+@app.get("/login/google")
 async def google_auth_start():
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
         raise HTTPException(status_code=503, detail="Google sign-in is not configured.")
@@ -496,6 +498,7 @@ async def google_auth_start():
 
 
 @app.get("/auth/google/callback")
+@app.get("/login/google/callback")
 async def google_auth_callback(
     code: Optional[str] = None,
     state: Optional[str] = None,
